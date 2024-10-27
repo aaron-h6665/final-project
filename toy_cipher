@@ -1,1 +1,49 @@
-def toy_cipher():
+s_box = {
+    0x0: 0xE, 0x1: 0x4, 0x2: 0xD, 0x3: 0x1,
+    0x4: 0x2, 0x5: 0xF, 0x6: 0xB, 0x7: 0x8,
+    0x8: 0x3, 0x9: 0xA, 0xA: 0x6, 0xB: 0xC,
+    0xC: 0x5, 0xD: 0x9, 0xE: 0x0, 0xF: 0x7
+}
+
+
+def toy_cipher(plaintext, s_box, key_1, key_2):
+    xored_plaintext = plaintext ^ int(key_1)
+    subsituted_plaintext = s_box[xored_plaintext]
+    ciphertext = subsituted_plaintext ^ int(key_2)
+    return ciphertext
+
+plaintext = 0x7
+key_1 = 0xb
+key_2 = 0xd
+print(toy_cipher(plaintext, s_box, key_1, key_2))
+
+"""
+Differential cryptanalysis stems from the analysis of the XOR 
+of two plaintexts as they travel through the cipher. 
+XOR is used because it tells us where two plaintexts differ. 
+If their XOR at some bit position is 1, then those two plaintexts 
+differ at that bit position.
+"""
+
+def analyze_xor(s_box, analyze_value):
+    keys_star = []
+    for key in s_box.keys():
+        for key_star in range(16):
+            if int(key) ^ int(key_star) == analyze_value:
+                keys_star.append(key_star)
+
+    y = []
+    y_star = []
+    for x in range(16):
+        y.append(s_box[x])
+        y_star.append(s_box[keys_star[x]])
+    return keys_star, y, y_star
+
+y, y_star = analyze_xor(s_box, 11)[1:]
+
+y_xored = [bin(int(a)^int(b)) for a,b in zip(y, y_star)]
+
+print(y_xored)
+
+
+
