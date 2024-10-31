@@ -1,3 +1,17 @@
+"""
+Author: Aaron Huang
+Last Modified: 10/28/2024
+Description: Basic Differential Cryptanalysis Attack
+Sources Consulted:
+    https://maticstric.github.io/differential-cryptanalysis-tutorial/#section-4-2
+    https://github.com/maticstric/differential-cryptanalysis-tutorial/blob/master/python/toy-cipher-diff-crypt.py
+
+"""
+
+import sys
+import random
+
+""" --- Variables --- """
 s_box = {
     0x0: 0xE, 0x1: 0x4, 0x2: 0xD, 0x3: 0x1,
     0x4: 0x2, 0x5: 0xF, 0x6: 0xB, 0x7: 0x8,
@@ -5,12 +19,23 @@ s_box = {
     0xC: 0x5, 0xD: 0x9, 0xE: 0x0, 0xF: 0x7
 }
 
+key_1 = 0xb
+key_2 = 0xd
+
+""" --- TOY CIPHER IMPLEMENTATION --- """
 
 def toy_cipher(plaintext, s_box, key_1, key_2):
-    xored_plaintext = plaintext ^ int(key_1)
-    subsituted_plaintext = s_box[xored_plaintext]
-    ciphertext = subsituted_plaintext ^ int(key_2)
+    xored_plaintext = add_round_key(plaintext, int(key_1))
+    subsituted_plaintext = substitute(xored_plaintext, s_box)
+    ciphertext = add_round_key(subsituted_plaintext, int(key_2))
+
     return ciphertext
+
+def substitute(state, s_box):
+    return s_box[state]
+
+def add_round_key(state, key):
+    return state ^ key
 
 plaintext = 0x7
 key_1 = 0xb
@@ -25,6 +50,99 @@ If their XOR at some bit position is 1, then those two plaintexts
 differ at that bit position.
 """
 
+def difference_distribution_table(s_box):
+    """
+    Create an array that represents the difference distribution table.
+
+    Returns the difference distirbution table.
+    """
+
+    diff_dist_table = [[[] for i in range(16)] for j in range(16)]
+
+    for x_prime in range(16):
+        for x in range(16):
+            x_star = x ^ x_prime
+
+            y = sbox[x]
+            y_star = sbox[x_star]
+            y_prime = y ^ y_star
+
+            diff_dist_table[x_prime][y_prime].append((x, x_star, y, y_star))
+
+    return diff_dist_table
+
+
+        # y, y_star = analyze_xor(s_box, i)[1:]
+
+        # y_xored = [int(a)^int(b) for a,b in zip(y, y_star)]
+
+        # #print(y_xored)
+        # print(appearances(y_xored))
+
+    """
+    This bias towards certain XORs is what makes differential 
+    cryptanalysis possible.
+    """
+
+print(difference_distribution_table(s_box))
+
+"""
+We can also realize that key addition doesn't change much.
+This is because XOR is associative, commutative, and a value
+XORed by itself is zero, and a value XORed by zero is itself.
+Thus (x ^ k) ^ (x_star ^ k) = x ^ x_star ^ k ^ k = 
+x ^ x_star ^ 0 = x ^ x_star
+
+"This is an incredibly useful realization. Given the XOR of 
+two plaintexts, we can predict with 100% certainty what their 
+XOR will be after key addition—it will always stay the same. 
+Remember that with the S-box, the best prediction we have is 
+only 50%, and many are much worse than that."
+"""
+
+def differential_attack():
+    # key_1 = 0xb
+    # key_2 = 0xd
+    # differential_characteristic = 0x5 -> 0xA
+    # good_pair = None
+
+    # while good_pair == None:
+    #     diff_char = pick_random_differential_characteristic(diff_dist_table)
+
+    #     good_pair = get_good_pair(diff_char)
+    pass
+
+
+#def select_keys():
+    #key_1 = random.randint(0, 16)
+    #key_2 = random.randint(0, 16)
+
+def get_good_pair(diff_char):
+    """
+    This function finds a pair of plaintexts whose XOR is equal to the input
+    XOR in diff_char and whose corresponding ciphertext XOR is equal to the
+    output XOR in diff_char. It returns it in this form:
+
+    (plaintext1, plaintext2, ciphertext1, ciphertext2)
+    """
+
+    pass
+
+def differential_characteristic(diff_dist_table):
+    """
+    This function returns a non-zero differential characteristic in the
+    difference distribution table in this form:
+
+    (input_xor, output_xor)
+    """
+
+    diff_char = None
+
+    pass
+
+
+
+"""
 def analyze_xor(s_box, analyze_value):
     keys_star = []
     for key in s_box.keys():
@@ -39,11 +157,11 @@ def analyze_xor(s_box, analyze_value):
         y_star.append(s_box[keys_star[x]])
     return keys_star, y, y_star
 
-y, y_star = analyze_xor(s_box, 11)[1:]
+def appearances(y_xored):
+    appearances = []
+    for x in range(16):
+        appearances.append(y_xored.count(x))
 
-y_xored = [bin(int(a)^int(b)) for a,b in zip(y, y_star)]
+    return appearances
 
-print(y_xored)
-
-
-
+"""
