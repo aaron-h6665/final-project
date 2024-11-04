@@ -7,6 +7,8 @@ Sources Consulted:
     https://github.com/maticstric/differential-cryptanalysis-tutorial/blob/master/python/toy-cipher-diff-crypt.py
 
 """
+# Maybe I should use jupyter notebook in the final presentation because then you can go step by step
+# good idea... 
 
 import sys
 import random
@@ -126,7 +128,8 @@ def get_good_pair(diff_char):
     (plaintext1, plaintext2, ciphertext1, ciphertext2)
     """
 
-    pass
+    ciphertext1 = s_box[plaintext1]
+    ciphertext2 = s_box[plaintext2]
 
 def differential_characteristic(diff_dist_table):
     """
