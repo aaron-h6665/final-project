@@ -2,8 +2,7 @@
 
 ## We had to option to explore whatever paradigm we wanted. I chose Attacks, and specifically a basic differential cryptanalysis attack.
 
-This repository contains the code that I have submitted for Phase Three of my Computer Science Class of Cryptography. The main file is the Jupyter Notebook that contains the tutor
-ial that I created for the interactive code demo, our final project. There are a few images that I have used as well in this repository.
+This repository contains the code that I have submitted for Phase Three of my Computer Science Class of Cryptography. The main file is the Jupyter Notebook (differential_cryptanalysis.ipynb) that contains the tutorial that I created for the interactive code demo, our final project. There are a few images that I have used as well in this repository.
 
 ## How to tweak this project for your own uses
 
