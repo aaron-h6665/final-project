@@ -6,11 +6,12 @@ This repository contains the code that I have submitted for Phase Three of my Co
 
 ## How to tweak this project for your own uses
 
-Feel free to take this code and test/improve the homemade DES, Diffie-Hellmann Key Exchange, and RSA for yourself.
+Feel free to take this code and test/improve the differential cryptanalysis attack for yourself.
 
 ## Find a bug?
 
 If you found an issue or would like to submit an improvement ot this project, please notify me by email: ahuang25@andover.edu.
 
 ## Work in Progress
-None
+* I will try to work on a more complex attack on my own time
+* I will try to add a bit more on AES vs. DES which is about security against differential cryptanalysis attacks.
